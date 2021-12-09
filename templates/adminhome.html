@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Admin Homepage</title>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styleadminhome.css')}}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div id="topbar">
+<h2 class="heading">FR SAMS Admin Panel</h2>
+<ul class="dropmenu">
+	<li>{{mesg1}}<i class="arrow down"></i><i class="arrow up"></i></li>
+	<ul class="dropcontent">
+	    <li><a href="{{url_for('logoutadmin')}}">Logout</a></li>
+	</ul>
+</ul>
+</div>
+<div class="sidebar">
+  <a href="#studentinfo" class="tablinks" onclick="openLink(event, 'studentinfo')" id="defaultOpen">Students Info</a>
+  <a href="#subjects" class="tablinks" onclick="openLink(event, 'subjects')">Manage Subjects</a>
+  <a href="#attendance" class="tablinks" onclick="openLink(event, 'attendance')">Attendance Monitor</a>
+  <a href="/adminhome/register" class="tablinks" onclick="openLink(event, 'registration')">Registration</a>
+</div>
+<div class="content">
+	<a name="studentinfo" class="tabcontent" id="studentinfo">
+	<h3>Students Information</h3>
+	<form action="/adminhome" method="POST" id="form0">
+	<div class="custom-select" style="width:200px;margin-left:200px;margin-top:-47px;display: none; ">
+	<select name="lecturer">
+	<option value="0">Select Lecturer</option>
+	{% for Fullname in lecturers %}
+    <option value="{{ Fullname[0] }}" disabled="true" hidden>{{ Fullname[0] }}</option>
+    {% endfor %}
+    </select>
+    </div>
+	<h4 style="padding-top: 15px;">Select Section:</h4>
+    <div class="custom-select" style="width:230px;margin-left:200px;margin-top:-49px;margin-bottom:20px; ">
+    <select name="section" id="section0" required>
+    <option value="0">Select Section</option>
+    {% for Section in sections %}
+    <option value="{{ Section[0] }}">{{ Section[0] }}</option>
+    {% endfor %}
+    </select>
+    </div>
+    <div class="custom-select" style="width:230px;margin-left:200px;margin-top:-47px;display: none ">
+    <select name="course">
+    <option value="0" disabled="true" hidden>Select Course</option>
+    <option value="STQA">STQA</option>
+    <option value="E-Commerce">E-Commerce</option>
+    <option value="DBMS">DBMS</option>
+    <option value="BDM">BDM</option>
+    <option value="OS">OS</option>
+    <option value="MT">MT</option>
+    <option value="DAA">DAA</option>
+    </select>
+    </div>	
+     <input type="submit" value="Submit" name="submit" class="filebutton0">
+    </form>
+    <span id="table" style="display:inline-block;border-style:None;height:175px;width:75%;border: 0px;overflow: auto;position: absolute;">
+    <table>
+    <tr>
+      <th>Username</th>
+      <th>Section</th>
+      <th>Emailid</th>
+      <th>ParentsEmaild</th>
+      <th>Mobilenumber</th>
+      <th>Attendance(%)</th>
+    </tr>
+    {% for student in studdata %}
+    <tr>
+      <td>{{ student[0] }}</td>
+      <td>{{ student[1] }}</td>
+      <td>{{ student[2] }}</td>
+      <td>{{ student[3] }}</td>
+      <td>{{ student[4] }}</td>
+      <td>{{ student[5] }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    </span>
+    <canvas id="myChart" style="margin-top:190px;border-style: line;border-color: black;border-style: none;position: absolute;width:800px;height:200px;box-shadow: 0 5px 25px rgba(0,0,0,.5);border-radius: 5px;"></canvas>
+	</a>
+	<a name="subjects" class="tabcontent" id="subjects">
+	<form action="/adminhome" method="POST">
+	<h3 style="padding-top: 15px;">Select Lecturer:</h3>
+	<div class="custom-select" style="width:230px;margin-left:200px;margin-top:-47px; ">
+	<select name="lecturer" required>
+	<option value="0">Select Lecturer</option>
+	{% for Fullname in lecturers %}
+    <option value="{{ Fullname[0] }}">{{ Fullname[0] }}</option>
+    {% endfor %}
+    </select>
+    </div>
+    <h3 style="padding-top: 15px;">Select Section:</h3>
+    <div class="custom-select" style="width:230px;margin-left:200px;margin-top:-47px; ">
+    <select name="section" required>
+    <option value="0">Select Section</option>
+    {% for Section in sections %}
+    <option value="{{ Section[0] }}">{{ Section[0] }}</option>
+    {% endfor %}
+    </select>
+    </div>
+    <h3 style="padding-top: 15px;">Select Course:</h3>
+    <div class="custom-select" style="width:230px;margin-left:200px;margin-top:-47px; ">
+    <select name="course" required>
+    <option value="0">Select Course</option>
+    <option value="STQA">STQA</option>
+    <option value="E-Commerce">E-Commerce</option>
+    <option value="DBMS">DBMS</option>
+    <option value="BDM">BDM</option>
+    <option value="OS">OS</option>
+    <option value="MT">MT</option>
+    <option value="DAA">DAA</option>
+    </select>
+    </div>	
+    <input type="submit" name="submit" value="Allot Section & Course" class="button">
+	</form>
+	<h3 id="mesgallot" style="font-family:verdana;font-weight:bold;color:#009900;padding:20px;margin-left: 40%;">{{ mesg }}</h3>
+    <hr color="black" style="height: 1px;margin-top: 40px;">
+    <h3 style="margin-left: 330px; ">Lecturer's Section and Course allotment Table</h3>
+    <span id="table" style="display:inline-block;border-style:None;height:310px;width:75%;border: 0px;overflow: auto;position: absolute;">
+    <table>
+    <tr>
+      <th>Username</th>
+      <th>Fullname</th>
+      <th>Allotted Course</th>
+      <th>Allotted Section</th>
+    </tr>
+    {% for lecturer in lecallotdata %}
+    <tr>
+      <td>{{ lecturer[0] }}</td>
+      <td>{{ lecturer[1] }}</td>
+      <td>{{ lecturer[2] }}</td>
+      <td>{{ lecturer[3] }}</td>
+    </tr>
+    {% endfor %}
+    </table>
+    </span>
+	</a>
+	<a name="attendance" class="tabcontent" id="attendance">
+	<h2 style="margin-left: 330px;">Face Recognition Attendance Monitor</h2>
+	<form action="/adminhome" method="POST" id="form" onsubmit="return facerec();">
+	<div class="custom-select" style="width:230px;margin-left:200px;margin-top:-47px;display: none; ">
+	<select name="lecturer">
+	<option value="0">Select Lecturer</option>
+	{% for Username in lecturers %}
+    <option value="{{ Username[0] }}" disabled="true" hidden>{{ Username[0] }}</option>
+    {% endfor %}
+    </select>
+    </div>
+    <h3 style="padding-top: 15px;">Select Section:</h3>
+    <div class="custom-select" style="width:230px;margin-left:200px;margin-top:-47px; ">
+    <select name="section" required>
+    <option value="0">Select Section</option>
+    {% for Section in sections %}
+    <option value="{{ Section[0] }}">{{ Section[0] }}</option>
+    {% endfor %}
+    </select>
+    </div>
+    <h3 style="padding-left: 580px;margin-top: -33px;">Select Course:</h3>
+    <div class="custom-select" style="width:230px;margin-left:800px;margin-top:-47px; ">
+    <select name="course" required>
+    <option value="0">Select Course</option>
+    <option value="STQA">STQA</option>
+    <option value="E-Commerce">E-Commerce</option>
+    <option value="DBMS">DBMS</option>
+    <option value="BDM">BDM</option>
+    <option value="OS">OS</option>
+    <option value="MT">MT</option>
+    <option value="DAA">DAA</option>
+    </select>
+    </div>
+    <img src="" id="videoplay">
+    <p align="justify" style="font-family:verdana;font-weight:bold;color:#3b5998;padding:10px;margin-left:55%;margin-right: 40px;font-size: 16px;position: relative;"><span style="color: #ff3333">Note:</span> Position your head in such a way that your face should detect in the yellow colour box and recognizes with rollno above the detection box.</p>
+    <input type="submit" name="submit" value="Start" class="filebutton">
+    <input type="button" value="Stop" class="filebutton1" onclick="return facedone();">
+	</form>
+	<p id="mailmesg" style="font-family:verdana;font-weight:bold;color:#009900;padding:20px;margin-top:110px;margin-left: 635px;font-size: 18px;text-align: justify;display: none;">Attendance report has been mailed to the absentee's parents</p>
+	</a>
+</div>
+<script>
+		function openLink(evt, linkName) {
+		    var i, tabcontent, tablinks;
+		    tabcontent = document.getElementsByClassName("tabcontent");
+		    for (i = 0; i < tabcontent.length; i++) {
+		    	tabcontent[i].disabled = 'true';
+		        tabcontent[i].style.display = "none";
+		    }
+		    tablinks = document.getElementsByClassName("tablinks");
+		    for (i = 0; i < tablinks.length; i++) {
+		        tablinks[i].className = tablinks[i].className.replace(" active", "");
+		    }
+		    document.getElementById(linkName).disabled='';
+		    document.getElementById(linkName).style.display = "block";
+		    evt.currentTarget.className += " active";
+		}
+		document.getElementById("defaultOpen").click();
+</script>
+<script type="text/javascript">
+	var x, i, j, selElmnt, a, b, c;
+/* Look for any elements with the class "custom-select": */
+x = document.getElementsByClassName("custom-select");
+for (i = 0; i < x.length; i++) {
+  selElmnt = x[i].getElementsByTagName("select")[0];
+  /* For each element, create a new DIV that will act as the selected item: */
+  a = document.createElement("DIV");
+  a.setAttribute("class", "select-selected");
+  a.innerHTML = selElmnt.options[selElmnt.selectedIndex].innerHTML;
+  x[i].appendChild(a);
+  /* For each element, create a new DIV that will contain the option list: */
+  b = document.createElement("DIV");
+  b.setAttribute("class", "select-items select-hide");
+  for (j = 1; j < selElmnt.length; j++) {
+    /* For each option in the original select element,
+    create a new DIV that will act as an option item: */
+    c = document.createElement("DIV");
+    c.innerHTML = selElmnt.options[j].innerHTML;
+    c.addEventListener("click", function(e) {
+        /* When an item is clicked, update the original select box,
+        and the selected item: */
+        var y, i, k, s, h;
+        s = this.parentNode.parentNode.getElementsByTagName("select")[0];
+        h = this.parentNode.previousSibling;
+        for (i = 0; i < s.length; i++) {
+          if (s.options[i].innerHTML == this.innerHTML) {
+            s.selectedIndex = i;
+            h.innerHTML = this.innerHTML;
+            y = this.parentNode.getElementsByClassName("same-as-selected");
+            for (k = 0; k < y.length; k++) {
+              y[k].removeAttribute("class");
+            }
+            this.setAttribute("class", "same-as-selected");
+            break;
+          }
+        }
+        h.click();
+    });
+    b.appendChild(c);
+  }
+  x[i].appendChild(b);
+  a.addEventListener("click", function(e) {
+    /* When the select box is clicked, close any other select boxes,
+    and open/close the current select box: */
+    e.stopPropagation();
+    closeAllSelect(this);
+    this.nextSibling.classList.toggle("select-hide");
+    this.classList.toggle("select-arrow-active");
+  });
+}
+
+function closeAllSelect(elmnt) {
+  /* A function that will close all select boxes in the document,
+  except the current select box: */
+  var x, y, i, arrNo = [];
+  x = document.getElementsByClassName("select-items");
+  y = document.getElementsByClassName("select-selected");
+  for (i = 0; i < y.length; i++) {
+    if (elmnt == y[i]) {
+      arrNo.push(i)
+    } else {
+      y[i].classList.remove("select-arrow-active");
+    }
+  }
+  for (i = 0; i < x.length; i++) {
+    if (arrNo.indexOf(i)) {
+      x[i].classList.add("select-hide");
+    }
+  }
+}
+
+/* If the user clicks anywhere outside the select box,
+then close all select boxes: */
+document.addEventListener("click", closeAllSelect);
+</script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+	function facerec(){
+		document.getElementById("videoplay").src='{{url_for('webcamrec')}}';
+		$.ajax({
+    		type:'POST',
+    		url:'{{url_for('adminhome')}}',
+    		data:$('#form').serialize(),
+    	});
+    	return false;
+    }
+		 function facedone()
+		 {
+		 	document.getElementById("videoplay").src='{{url_for('webcamstop')}}';
+		 	document.getElementById("mailmesg").style.display='block';
+		 	return false;
+		 }
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+<script type="text/javascript">
+var myData= [{% for item in attdata %}
+           "{{ item }}",
+          {% endfor %} ];
+var myColors=[];
+var myBcolors=[];
+$.each(myData,function(index,value){
+	if(value>50.0){
+		myColors[index]="rgb(182,196,226,0.6)";
+		myBcolors[index]="#2b406e";
+	}
+	else{
+		myColors[index]="rgba(255, 99, 132, 0.6)";
+		myBcolors[index]="#FF1748";
+	}
+});
+var ctx = document.getElementById('myChart').getContext("2d");;
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for item in rolldata %}
+           "{{ item[0] }}",
+          {% endfor %}
+  ],
+        datasets: [{
+            label: 'Attendance(%)',
+            data: myData, 
+            backgroundColor:myColors,
+            borderColor:myBcolors,
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Login Page</title>
+<meta http-equiv="Cache-control" content="no-cache">
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='stylelogin.css')}}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div class="main"><h2 class="title" align="center">FACE RECOGNITION STUDENT ATTENDANCE MANAGEMENT SYSTEM</h2></div>
+<div class="container">
+<img src="{{url_for('static',filename='member.png')}}" class="user">
+<h1>Member Login</h1>
+<form action="/login" method="POST" id="form" autocomplete="off">
+<div class="tbox">
+<i class="fa fa-user fa-lg cust" aria-hidden="true"></i>
+<input type="text" placeholder="Username" name="username" value="" required/>
+</div>
+<div class="tbox">
+<i class="fa fa-lock fa-lg cust" aria-hidden="true"></i>
+<input type="password" placeholder="Password" id="pwd" name="password" value="" required/>
+<i class="fa fa-eye fa-lg eye" id="eye" ></i>
+</div>
+<i class="fa fa-users fa-lg users" aria-hidden="true"></i>
+<select name="usertype" id="type" required>
+	<option value="default" selected disabled hidden>---Select UserType---</option>
+	<option value="Student">Student</option>
+	<option value="Lecturer">Lecturer</option>
+	<option value="Administrator">Administrator</option>
+</select>
+<input type="submit" class="button" onsubmit="return reset()" name="submit" value="LOGIN" />
+</form>	
+<a class="b1" href="{{url_for('forgotpassword')}}">Forgot Password?</a>
+<p align="center" style="font-family:verdana;font-weight:bold;color:#ff3333;margin-top: -10px;">{{msg}}</p>
+<!--<a class="b2" href="{{url_for('register')}}">Click here to Register</a>-->
+</div>
+<script type="text/javascript">
+	var pwd=document.getElementById('pwd');
+	var eye=document.getElementById('eye');
+	eye.addEventListener('click',togglePass);
+	function togglePass() {
+		eye.classList.toggle('active');
+		(pwd.type=='password') ? pwd.type='text':pwd.type='password';
+	}
+	function reset()
+	{
+		document.getElementById("form").reset();
+	}
+</script>
+</body>
+</html>

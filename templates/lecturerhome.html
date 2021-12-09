@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Lecturer Homepage</title>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='stylelecturerhome.css')}}">
+</head>
+<body>
+<h2 class="heading">FR SAMS Lecturer Panel</h2>
+<div id="topbar">
+<ul class="dropmenu">
+	<li>{{mesg1}}<i class="arrow down"></i><i class="arrow up"></i></li>
+	<ul class="dropcontent">
+		<li><a href="{{url_for('logoutlecturer')}}">Logout</a></li>
+	</ul>
+</ul>
+</div>
+<div class="sidebar">
+  <a href="#myprofile" class="tablinks" onclick="openLink(event, 'myprofile')" id="defaultOpen">My Profile</a>
+  <a href="#updation" class="tablinks" onclick="openLink(event, 'sectionmgmt')">Section Mgmt.</a>
+  <a href="#updation" class="tablinks" onclick="openLink(event, 'studentinfo')">Student Att Info.</a>
+</div>
+<div class="content">
+	<a name="myprofile" class="tabcontent" id="myprofile">
+	<h2>Personal Information</h2>
+	<h4 style="color: red;padding-top: 10px;">You can update only your EmailID and MobileNo</h4>
+	<form action="/lecturerhome" method="POST" id="form" autocomplete="off">
+	<h4 style="padding-top: 15px;">Full Name:</h4>
+	<div class="tbox" id="name">
+    <input placeholder="Full Name" id="namei" name="name" type="text"  size="30" value="{{input1}}" disabled><br>
+    </div>
+    <h4 style="padding-top: 15px;">User Name:</h4>
+    <div class="tbox" id="uname">
+    <input placeholder="User Name" id="unamei" type="text" name="uname" size="30" value="{{input2}}" disabled><br>
+    </div>
+	<h4 style="padding-top: 15px;">Email ID:</h4>
+	<div class="tbox" id="mailid">
+    <input placeholder="Email ID" name="email" id="mailid" type="text"  size="30" value="{{input3}}" required><br>
+    </div>
+	<h4 style="padding-top: 15px;">Mobile No:</h4>
+	<div class="tbox" id="mno">
+    <input placeholder="Mobile Number" id="mnoi" name="mnumber" type="text"  size="30" value="{{input4}}" required><br>
+    </div>
+    <input type="submit" name="submit" value="Update" class="button"></input>
+    </form>
+    <p style="font-family:verdana;font-weight:bold;color:#009900;padding:20px;margin-left: 9%;">{{fmesg}}</p>
+	</a>
+	<a name="sectionmgmt" class="tabcontent" id="sectionmgmt">
+	<h2>Section & Course Information </h2>
+	<div style="padding-bottom: 5px;">
+	<h4 style="color:#2b406e">Allotted Section:</h4>
+	<h4><label type="text" name="allottsection" style="margin-left: 18%;margin-top: -41px;position: absolute;">{{output11}}</label></h4>
+	<h4 style="color:#2b406e;margin-left: 50%;margin-top: -41px;">Allotted Course:</h4>
+	<h4><label type="text" name="allotcourse" style="margin-left: 56%;margin-top: -41px;position: absolute;">{{output12}}</label></h4>
+	<h4 style="color:#2b406e">No. of Students in Section:</h4>
+	<h4><label type="text" name="tstudents" style="margin-left: 18%;margin-top: -41px;position: absolute;">{{output13}}</label></h4>
+	<h4 style="color:#2b406e;margin-left: 50%;margin-top: -41px;">Total Classes Held:</h4>
+	<h4><label type="text" name="tclasses" style="margin-left: 56%;margin-top: -41px;position: absolute;">{{output14}}</label></h4>
+	</div>
+	<span id="table" style="display:inline-block;border-style:None;height:190px;width:75%;border: 0px;overflow: auto;position: absolute;">
+	<table>
+	  <tr>
+	    <th>Username</th>
+	    <th>Section</th>
+	    <th>Course</th>
+	    <th>ParentsEmaild</th>
+	    <th>Mobilenumber</th>
+	    <th>No. of Classes Present</th>
+	    <th>No. of Classes Absent</th>
+	  </tr>
+	  {% for col in htmltable %}
+      <tr>
+      <td>{{ col[0][0] }}</td>
+      <td>{{ col[0][1] }}</td>
+      <td>{{ col[0][2] }}</td>
+      <td>{{ col[1] }}</td>
+      <td>{{ col[2] }}</td>
+      <td>{{ col[3] }}</td>
+      <td>{{ col[4] }}</td>
+      </tr>
+      {%  endfor %}
+    </table>
+    </span>
+    <canvas id="myChart" style="margin-top:210px;border-style: line;border-color: black;border-style: none;position: absolute;width:800px;height:180px;box-shadow: 0 5px 25px rgba(0,0,0,.5);border-radius: 5px;"></canvas>
+	</a>
+	<a name="studentinfo" class="tabcontent" id="studentinfo">
+	<h2>Detailed Student Attendance Information </h2>
+	<div class="sbox" id="roll">
+    <input placeholder="What are you looking for?" id="rolli" name="rollno" type="text" class="search form-control size="30"><br>
+    </div>
+	<span id="table" style="display:inline-block;border-style:None;height:440px;width:75%;border: 0px;overflow: auto;position: absolute;margin-top: 20px;">
+	<table class="table table-striped" id="studenttable">
+	<thead>
+	  <tr>
+	    <th>Username</th>
+	    <th>Section</th>
+	    <th>Course</th>
+	    <th>Attendance</th>
+	    <th>StartPeriodTime</th>
+	    <th>EndPeriodTime</th>
+	  </tr>
+	 </thead>
+	  <tbody>
+	  {% for student in stuatt %}
+	  <tr>
+      <td>{{ student[0] }}</td>
+      <td>{{ student[1] }}</td>
+      <td>{{ student[2] }}</td>
+      <td>{{ student[3] }}</td>
+      <td>{{ student[4] }}</td>
+      <td>{{ student[5] }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </span>
+	</a>
+</div>
+<script>
+		function openLink(evt, linkName) {
+		    var i, tabcontent, tablinks;
+		    tabcontent = document.getElementsByClassName("tabcontent");
+		    for (i = 0; i < tabcontent.length; i++) {
+		    	tabcontent[i].disabled = 'true';
+		        tabcontent[i].style.display = "none";
+		    }
+		    tablinks = document.getElementsByClassName("tablinks");
+		    for (i = 0; i < tablinks.length; i++) {
+		        tablinks[i].className = tablinks[i].className.replace(" active", "");
+		    }
+		    document.getElementById(linkName).disabled='';
+		    document.getElementById(linkName).style.display = "block";
+		    evt.currentTarget.className += " active";
+		}
+		document.getElementById("defaultOpen").click();
+	</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+<script type="text/javascript">
+var ctx = document.getElementById('myChart').getContext("2d");;
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: [{% for item in students %}
+           "{{ item[0] }}",
+          {% endfor %}
+  ],
+        datasets: [
+        {
+            label: 'No. of Classes Present',
+            data: [{% for item in bar1 %}
+           "{{ item }}",
+          {% endfor %}
+  ], 
+            backgroundColor:"rgb(182,196,226,0.6)",
+            borderColor:"#2b406e",
+            borderWidth: 1
+        },
+        {
+            label: 'No. of Classes Absent',
+            data: [{% for item in bar2 %}
+           "{{ item }}",
+          {% endfor %}
+  ],  
+            backgroundColor:"rgba(255, 99, 132, 0.6)",
+            borderColor:"#FF1748",
+            borderWidth: 1
+        },
+        ]
+    },
+    options: {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.search').on('keyup',function(){
+        var searchTerm = $(this).val().toLowerCase();
+        $('#studenttable tbody tr').each(function(){
+            var lineStr = $(this).text().toLowerCase();
+            if(lineStr.indexOf(searchTerm) === -1){
+                $(this).hide();
+            }else{
+                $(this).show();
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Student Homepage</title>
+	<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='stylestudenthome.css')}}">
+</head>
+<body>
+<div id="topbar">
+<h2 class="heading">FR SAMS Student Panel</h2>
+<ul class="dropmenu">
+	<li>{{mesg1}}<i class="arrow down"></i><i class="arrow up"></i></li>
+	<ul class="dropcontent">
+		<li><a href="{{url_for('logoutstudent')}}">Logout</a></li>
+	</ul>
+</ul>
+</div>
+<div class="sidebar">
+  <a href="#myprofile" class="tablinks" onclick="openLink(event, 'myprofile')" id="defaultOpen">My Profile</a>
+  <!--<a href="#updation" class="tablinks" onclick="openLink(event, 'updation')">Face Updation</a>-->
+  <a href="#attendance" class="tablinks" onclick="openLink(event, 'attendance')">Attendance Mgmt.</a>
+</div>
+<div class="content">
+	<a name="myprofile" class="tabcontent" id="myprofile">
+	<h2>Personal Information</h2>
+	<h4 style="color: red;padding-top: 10px;">You can update only your EmailID and MobileNo</h4>
+	<form action="/studenthome" method="POST" id="form">
+	<h4 style="padding-top: 15px;">Full Name:</h4>
+	<div class="tbox" id="name">
+    <input placeholder="Full Name" id="namei" name="name" type="text"  size="30" value="{{input1}}" disabled><br>
+    </div>
+	<h4 style="padding-top: 15px;">Roll No:</h4>
+	<div class="tbox" id="roll">
+    <input placeholder="Roll No / User Name"  id="rolli" name="rollno" type="text"  size="30" value="{{input2}}" disabled><br>
+    </div>
+	<h4 style="padding-top: 15px;">Section:</h4>
+	<div class="tbox" id="section">
+    <input placeholder="Section [format:YearBranch-Section e.g.4CSE-1]" id="sectioni" name="section" type="text"  size="30" value="{{input3}}" disabled><br>
+    </div>
+	<h4 style="padding-top: 15px;">Parent's Email ID:</h4>
+	<div class="tbox" id="pmailid">
+    <input placeholder="Parent's Email ID" id="pmailidi" name="parentemail" type="text"  size="30" value="{{input4}}" disabled><br>
+    </div>
+	<h4 style="padding-top: 15px;">Email ID:</h4>
+	<div class="tbox" id="mailid">
+    <input placeholder="Email ID" name="email" id="mailid" type="text"  size="30" value="{{input5}}" required><br>
+    </div>
+	<h4 style="padding-top: 15px;">Mobile No:</h4>
+	<div class="tbox" id="mno">
+    <input placeholder="Mobile Number" id="mnoi" name="mnumber" type="text"  size="30" value="{{input6}}" required><br>
+    </div>
+    <input type="submit" name="submit" value="Update" class="button"></input>
+    </form>
+    <p style="font-family:verdana;font-weight:bold;color:#009900;padding:20px;margin-left: 9%;">{{fmesg}}</p>
+	</a>
+	<!--<a name="updation" class="tabcontent" id="updation">
+	<h1 class="face">Face Updation</h1>
+	<div class="vbox" align="center">
+    <img src="" id="videoplay">
+    </div>
+     <p align="justify" style="font-family:verdana;font-weight:bold;color:#3b5998;padding:10px;margin-left:55%;margin-right: 40px;font-size: 16px;position: relative;"><span style="color: #ff3333">Note:</span>When the below update button is clicked, a camera will be activated and a window will be opened adjacent to this message, position your head in such a way that your face should detect in the yellow colour box and turn the head slightly towards the right, left and the centre in order to capture all the facial features. If live video streaming stops that means <span style="color: #009900">your face was updated successfully.</span></p>
+    <input type="submit" value="Update" class="filebutton" onclick="return faceregister();">
+     <h4 style="font-family:verdana;font-weight:bold;color:#009900;padding:10px;position: relative;margin-top: 12%;margin-left:58%;">{{ messagel }}</h4>
+	</a>-->
+	<a name="attendance" class="tabcontent" id="attendance">
+	<h2>Attendance Report</h2>
+	<h4 style="color:#2b406e">Attendance Percentage:</h4>
+	<h4><label type="text" name="percentage" style="margin-left: 16%;margin-top: -41px;position: absolute;color:green ">{{output1}}</label></h4>
+	<h4 style="color:#2b406e">Name:</h4>
+	<h4><label type="text" name="nameatt" style="margin-left: 16%;margin-top: -41px;position: absolute;">{{input1}}</label></h4>
+	<h4 style="color:#2b406e">Total Classes Held:</h4>
+	<h4><label type="text" name="tclasses" style="margin-left: 16%;margin-top: -41px;position: absolute;">{{output2}}</label></h4>
+	<h4 style="color:#2b406e">Total Classes Present:</h4>
+	<h4><label type="text" name="classesp" style="margin-left: 16%;margin-top: -41px;position: absolute;">{{output3}}</label></h4>
+	<h4 style="color:#2b406e">Absent On:</h4>
+	<p><span id="absenton" style="display:inline-block;border-style:None;height:60px;width:57%;border: 0px;overflow: auto;margin-left: 16%;margin-top: -41px;position: absolute;">
+	{% for course in courses %}{{course[0]}} ({{course[1]}} - {{course[2]}})<br>{% endfor %}
+	</span></p>
+	<canvas id="myChart" style="margin-top:60px;border-style: line;border-color: black;border-style: none;position: absolute;width:800px;height:200px;box-shadow: 0 5px 25px rgba(0,0,0,.5);border-radius: 5px;"></canvas>
+	</a>
+</div>
+<script>
+		function openLink(evt, linkName) {
+		    var i, tabcontent, tablinks;
+		    tabcontent = document.getElementsByClassName("tabcontent");
+		    for (i = 0; i < tabcontent.length; i++) {
+		    	tabcontent[i].disabled = 'true';
+		        tabcontent[i].style.display = "none";
+		    }
+		    tablinks = document.getElementsByClassName("tablinks");
+		    for (i = 0; i < tablinks.length; i++) {
+		        tablinks[i].className = tablinks[i].className.replace(" active", "");
+		    }
+		    document.getElementById(linkName).disabled='';
+		    document.getElementById(linkName).style.display = "block";
+		    evt.currentTarget.className += " active";
+		}
+		document.getElementById("defaultOpen").click();
+	</script>
+<script type="text/javascript">
+	function faceregister(){
+		 	document.getElementById("videoplay").src='{{url_for('webcam')}}';
+		 }
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+<script type="text/javascript">
+var canvas = document.getElementById('myChart');
+var data = {
+labels: [{% for item in subjects %}
+           "{{ item }}",
+          {% endfor %}
+	],
+datasets: [
+{
+    label: "Classes Attended",
+    fill: true,
+    lineTension: 0.1,
+    backgroundColor: "rgb(182,196,226,0.2)",
+    borderColor: "#2b406e",
+    borderCapStyle: 'butt',
+    borderDash: [],
+    borderDashOffset: 0.0,
+    borderJoinStyle: 'miter',
+    pointBorderColor: "#2b406e",
+    pointBackgroundColor: "white",
+    pointBorderWidth: 1,
+    pointHoverRadius: 5,
+    pointHoverBackgroundColor: "rgb(182,196,226)",
+    pointHoverBorderColor: "white",
+    pointHoverBorderWidth: 2,
+    pointRadius: 5,
+    pointHitRadius: 10,
+    data: [{% for item in classesnum %}
+           "{{ item }}",
+          {% endfor %}
+	],
+}
+]
+};
+var option = {
+showLines: true
+};
+var myLineChart = Chart.Line(canvas,{
+data:data,
+options:option
+});
+</script>
+</body>
+</html>

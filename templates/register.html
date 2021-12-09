@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<head>
+	<title>Registration Page</title>
+	<meta http-equiv="Cache-control" content="no-cache">
+	<script lanaguage="javascript">
+    function change()
+    {
+        if(document.getElementById("type").value=='Student')
+        {
+            document.getElementById("roll").style.display='block';document.getElementById("rolli").disabled='';
+            document.getElementById("section").style.display='block';document.getElementById("sectioni").disabled='';
+            document.getElementById("pmailid").style.display='block';document.getElementById("pmailidi").disabled='';
+            document.getElementById("uname").style.display='none';document.getElementById("unamei").disabled='true';
+            document.getElementById("formfaceregister").style.display='block';document.getElementById("faceform").disabled='';
+
+        }
+        else if(document.getElementById("type").value=='Lecturer')
+        {
+            document.getElementById("uname").style.display='block';document.getElementById("unamei").disabled='';
+            document.getElementById("roll").style.display='none';document.getElementById("rolli").disabled='true';
+            document.getElementById("section").style.display='none';document.getElementById("sectioni").disabled='true';
+            document.getElementById("pmailid").style.display='none';document.getElementById("pmailidi").disabled='true';
+            document.getElementById("formfaceregister").style.display='none';document.getElementById("faceform").disabled='true';
+        }
+    }
+   </script>
+<link rel="stylesheet" type="text/css" href="{{url_for('static',filename='styleregister.css')}}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<div class="main"><h2 align="center">FACE RECOGNITION STUDENT ATTENDANCE MANAGEMENT SYSTEM</h2></div>
+<center class="container">
+	<div class="title"><h2>Registration Form</h2></div>
+	<form action="/adminhome/register" method="POST" id="formregister" autocomplete="off">
+	    <div class="sbox">
+        <i class="fa fa-users fa-lg users" aria-hidden="true"></i>
+        <select name="usertype" required onchange="return change();" id="type">
+            <option value="default" selected="true" disabled="true" hidden>---Select UserType---</option>
+	        <option value="Student">Student</option>
+	        <option value="Lecturer">Lecturer</option>
+	    </select><br></div>
+			<div class="tbox" id="roll">
+            <i class="fa fa-id-badge fa-lg cust" aria-hidden="true"></i>
+            <input placeholder="Roll No [e.g.B15CS036] / User Name" id="rolli" name="rollno" type="text"  size="30" required><br>
+            </div>
+			<div class="tbox" id="section">
+            <i class="fa fa-id-card cust" aria-hidden="true"></i>
+            <input placeholder="Section [format:YearBranch-Section e.g.4CSE-1]" id="sectioni" name="section" type="text"  size="30" required><br>
+            </div>
+			<div class="tbox" id="uname" style="display: none;">
+            <i class="fa fa-user fa-lg cust" aria-hidden="true"></i>
+            <input placeholder="User Name" id="unamei" type="text" name="uname" size="30" disabled="true" required><br>
+            </div>
+			<div class="tbox" id="name">
+            <i class="fa fa-user-circle fa-lg cust" aria-hidden="true"></i>
+            <input placeholder="Full Name" id="namei" name="name" type="text"  size="30" required><br>
+            </div>
+			<div class="tbox"  id="mailid">
+            <i class="fa fa-envelope cust" aria-hidden="true"></i>
+            <input placeholder="Email ID" id="mailidi" name="email" type="text"  size="30" required><br>
+            </div>
+			<div class="tbox" id="pmailid">
+            <i class="fa fa-envelope cust" aria-hidden="true"></i>
+            <input placeholder="Parent's Email ID" id="pmailidi" name="parentemail" type="text"  size="30" required><br>
+            </div>
+			<div class="tbox"  id="mno">
+            <i class="fa fa-mobile fa-lg cust" aria-hidden="true"></i>
+            <input placeholder="Mobile Number" id="mnoi" name="mnumber" type="text"  size="30" required><br>
+            </div>
+			<div class="tbox" id="pass">
+            <i class="fa fa-lock fa-lg cust" aria-hidden="true"></i>
+            <input placeholder="Password" id="passi" name="password" type="password"  size="30" required>
+            <i class="fa fa-eye fa-lg eye" id="eye" ></i><br>
+            </div>
+		<a href="{{url_for('adminhome')}}" class="b">Back to Admin</a></td><input type="submit" name="submit" value="Register" class="button" onsubmit="document.getElementById('formregister').reset"></input>
+		 <p align="center" style="font-family:verdana;font-weight:bold;color:#009900;padding:10px;">{{msg1}}{{usname}}{{msg2}}</p>
+	</form>
+    <form action="/faceregister" method="POST" enctype="multipart/form-data" id="formfaceregister" autocomplete="off" onsubmit="return faceregister();">
+           <fieldset id="faceform" style="border: none;outline: none;padding-left: 0px">
+            <h3 align="center" style="font-family: verdana;font-weight: bold;color: #3b5998;padding: 20px; font-size: 22px;" >Face Registration</h2>
+            <div class="tbox">
+            <i class="fa fa-id-card cust" aria-hidden="true"></i>
+            <input type="text" name="section2" id="sec2" placeholder="Section [format:YearBranch-Section e.g.4CSE-1]" required="required"><br>
+            </div>
+            <div class="tbox">
+            <i class="fa fa-id-badge fa-lg cust" aria-hidden="true"></i>
+            <input type="text" name="rollno2" id="roll2" placeholder="Roll No [e.g.B15CS036]" required="required"><br>
+            </div>
+            <p align="justify" style="font-family:verdana;font-weight:bold;color:#3b5998;padding:10px;margin-left: 40px;margin-right: 40px;font-size: 14px;"><span style="color: #ff3333">Note:</span>When the below register button is clicked, a camera will be activated and a window will be opened below this message, position your head in such a way that your face should detect in the yellow colour box and turn the head slightly towards the right, left and the centre in order to capture all the facial features. If live video streaming stops that means <span style="color: #009900">your face was registered successfully.</span></p>
+            <div class="vbox" align="center">
+            <img src="" id="videoplay" style="display: none;" style="display: none;">
+            </div>
+            <input type="submit" value="Register" class="filebutton">
+            </fieldset>
+            <p align="center" style="font-family:verdana;font-weight:bold;color:#009900;padding:10px;">{{ message }}</p>
+        </form>
+</center>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+    var pwd=document.getElementById('passi');
+    var eye=document.getElementById('eye');
+    eye.addEventListener('click',togglePass);
+    function togglePass() {
+        eye.classList.toggle('active');
+        (pwd.type=='password') ? pwd.type='text':pwd.type='password';
+    }
+    function faceregister(){
+    	$.ajax({
+    		type:'POST',
+    		url:'{{url_for('faceregister')}}',
+    		data:$('#formfaceregister').serialize(),
+    	});
+    	document.getElementById("formfaceregister").reset();
+    	document.getElementById("videoplay").style.display='block';
+    	document.getElementById("videoplay").src='{{url_for('webcam')}}';
+    	return false;
+    }
+</script>
+</body>
+</html>
